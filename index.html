@@ -36,12 +36,12 @@
         }
         #runner {
             position: absolute;
-            left: 0;
+            right: 0;
             top: -25px;
             font-size: 40px;
-            transition: left 0.5s;
+            transition: right 0.5s;
         }
-        #endFlag {
+        #startFlag {
             position: absolute;
             right: -20px;
             top: -25px;
@@ -62,11 +62,11 @@
     </div>
     <div id="runTrack">
         <div id="runner">🏃</div>
-        <div id="endFlag">🏁</div>
+        <div id="startFlag">🏁</div>
     </div>
 
     <script>
-        const runnerEmojis = ['🏃', '🏃‍♂️'];
+        const runnerEmojis = ['🏃', '🏃‍♂️', '🏃‍♀️', '🏃‍♂️'];
         let emojiIndex = 0;
 
         function updateClock() {
@@ -98,9 +98,9 @@
 
             document.getElementById('progressPercent').textContent = percent.toFixed(2) + '%';
             
-            // 달리는 사람 위치 업데이트
+            // 달리는 사람 위치 업데이트 (오른쪽에서 왼쪽으로)
             const runner = document.getElementById('runner');
-            runner.style.left = `${percent * 2.8}px`; // 300px * 94% = 282px (이모지 크기 고려)
+            runner.style.right = `${(100 - percent) * 2.8}px`; // 300px * (100 - percent)% (이모지 크기 고려)
             
             // 달리는 모션 애니메이션
             runner.textContent = runnerEmojis[emojiIndex];
@@ -109,7 +109,7 @@
 
         setInterval(updateClock, 1000);
         setInterval(updateCountdown, 1000);
-        setInterval(updateYearProgress, 500); // 달리는 모션을 더 빠르게 업데이트
+        setInterval(updateYearProgress, 250); // 달리는 모션을 더 빠르게 업데이트
         updateClock();
         updateCountdown();
         updateYearProgress();
