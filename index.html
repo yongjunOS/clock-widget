@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시계 위젯</title>
+    <title>시계 및 연말 카운트다운</title>
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -14,19 +15,21 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
-        #clock {
-            font-size: 3em;
+        #clock, #countdown {
+            font-size: 2em;
             font-weight: bold;
             color: #333;
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 10px;
         }
     </style>
 </head>
 <body>
     <div id="clock"></div>
+    <div id="countdown"></div>
 
     <script>
         function updateClock() {
@@ -37,8 +40,23 @@
             document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
         }
 
+        function updateCountdown() {
+            const now = new Date();
+            const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59); // 12월 31일 23:59:59
+            const timeLeft = endOfYear - now;
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').textContent = `올해 말까지: ${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+        }
+
         setInterval(updateClock, 1000);
-        updateClock(); // 페이지 로드 시 즉시 시간 표시
+        setInterval(updateCountdown, 1000);
+        updateClock();
+        updateCountdown();
     </script>
 </body>
 </html>
