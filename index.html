@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시계, 연말 카운트다운 및 땀 흘리는 달팽이</title>
+    <title>시계, 연말 카운트다운, 땀 흘리는 달팽이 및 태양 움직임</title>
     <style>
         body {
             display: flex;
@@ -13,26 +13,29 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            transition: background-color 1s ease;
+            overflow: hidden;
         }
         #clock, #countdown, #yearProgress {
             font-size: 1.5em;
             font-weight: bold;
             color: #333;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             margin: 10px;
             text-align: center;
+            z-index: 10;
         }
         #snailTrack {
             width: 300px;
             height: 50px;
-            background-color: #e0e0e0;
+            background-color: rgba(224, 224, 224, 0.8);
             border-radius: 25px;
             position: relative;
             margin-top: 20px;
+            z-index: 10;
         }
         #snail {
             position: absolute;
@@ -60,9 +63,24 @@
             font-size: 0.8em;
             margin-right: 10px;
         }
+        #sun {
+            position: absolute;
+            font-size: 60px;
+            transition: all 1s ease;
+        }
+        #sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
+    <div id="sky"></div>
+    <div id="sun">☀️</div>
     <div id="clock"><span class="label">현재 시간:</span><span id="currentTime"></span></div>
     <div id="countdown"><span class="label">올해 말까지:</span><span id="timeLeft"></span></div>
     <div id="yearProgress">
@@ -74,12 +92,55 @@
     </div>
 
     <script>
+        function updateSunPosition() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const totalMinutes = hours * 60 + minutes;
+            
+            // 태양의 위치 계산 (6시부터 18시까지 움직임)
+            const sunProgress = Math.max(0, Math.min(1, (totalMinutes - 360) / 720));
+            const sunX = sunProgress * 100;
+            const sunY = Math.sin(Math.PI * sunProgress) * 50;
+            
+            const sun = document.getElementById('sun');
+            sun.style.left = `${sunX}vw`;
+            sun.style.bottom = `${sunY}vh`;
+            
+            // 밤에는 태양 숨기기
+            sun.style.opacity = (hours >= 6 && hours < 18) ? '1' : '0';
+        }
+
+        function updateBackground() {
+            const now = new Date();
+            const hours = now.getHours();
+            let color;
+
+            if (hours >= 5 && hours < 11) {
+                // 아침 (5:00 - 10:59)
+                color = '#87CEEB';  // 하늘색
+            } else if (hours >= 11 && hours < 16) {
+                // 낮 (11:00 - 15:59)
+                color = '#87CEFA';  // 밝은 하늘색
+            } else if (hours >= 16 && hours < 20) {
+                // 저녁 (16:00 - 19:59)
+                color = '#FFA500';  // 주황색
+            } else {
+                // 밤 (20:00 - 4:59)
+                color = '#191970';  // 짙은 남색
+            }
+
+            document.body.style.backgroundColor = color;
+        }
+
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+            updateBackground();
+            updateSunPosition();
         }
 
         function updateCountdown() {
