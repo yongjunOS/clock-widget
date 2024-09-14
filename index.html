@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시계, 연말 카운트다운 및 달리는 사람</title>
+    <title>시계, 연말 카운트다운 및 땀 흘리는 달팽이</title>
     <style>
         body {
             display: flex;
@@ -26,7 +26,7 @@
             margin: 10px;
             text-align: center;
         }
-        #runTrack {
+        #snailTrack {
             width: 300px;
             height: 50px;
             background-color: #e0e0e0;
@@ -34,14 +34,22 @@
             position: relative;
             margin-top: 20px;
         }
-        #runner {
+        #snail {
             position: absolute;
-            right: 0;
+            left: 0;
             top: -25px;
             font-size: 40px;
-            transition: right 0.5s;
+            transition: left 0.5s;
         }
-        #startFlag {
+        #sweat {
+            position: absolute;
+            font-size: 20px;
+            top: -15px;
+            left: 25px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        #endFlag {
             position: absolute;
             right: -20px;
             top: -25px;
@@ -60,15 +68,12 @@
     <div id="yearProgress">
         <span class="label">올해 진행률:</span><span id="progressPercent"></span>
     </div>
-    <div id="runTrack">
-        <div id="runner">🏃</div>
-        <div id="startFlag">🏁</div>
+    <div id="snailTrack">
+        <div id="snail">🐌<span id="sweat">💦</span></div>
+        <div id="endFlag">🏁</div>
     </div>
 
     <script>
-        const runnerEmojis = ['🏃', '🏃‍♂️', '🏃‍♀️', '🏃‍♂️'];
-        let emojiIndex = 0;
-
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -98,18 +103,18 @@
 
             document.getElementById('progressPercent').textContent = percent.toFixed(2) + '%';
             
-            // 달리는 사람 위치 업데이트 (오른쪽에서 왼쪽으로)
-            const runner = document.getElementById('runner');
-            runner.style.right = `${(100 - percent) * 2.8}px`; // 300px * (100 - percent)% (이모지 크기 고려)
+            // 달팽이 위치 업데이트
+            const snail = document.getElementById('snail');
+            snail.style.left = `${percent * 2.8}px`; // 300px * 94% = 282px (달팽이 크기 고려)
             
-            // 달리는 모션 애니메이션
-            runner.textContent = runnerEmojis[emojiIndex];
-            emojiIndex = (emojiIndex + 1) % runnerEmojis.length;
+            // 땀 애니메이션
+            const sweat = document.getElementById('sweat');
+            sweat.style.opacity = Math.random() > 0.5 ? '1' : '0';
         }
 
         setInterval(updateClock, 1000);
         setInterval(updateCountdown, 1000);
-        setInterval(updateYearProgress, 250); // 달리는 모션을 더 빠르게 업데이트
+        setInterval(updateYearProgress, 500); // 달팽이와 땀 업데이트 주기
         updateClock();
         updateCountdown();
         updateYearProgress();
