@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시계, 연말 카운트다운 및 달팽이 진행</title>
+    <title>시계, 연말 카운트다운 및 달리는 사람</title>
     <style>
         body {
             display: flex;
@@ -26,7 +26,7 @@
             margin: 10px;
             text-align: center;
         }
-        #snailTrack {
+        #runTrack {
             width: 300px;
             height: 50px;
             background-color: #e0e0e0;
@@ -34,7 +34,7 @@
             position: relative;
             margin-top: 20px;
         }
-        #snail {
+        #runner {
             position: absolute;
             left: 0;
             top: -25px;
@@ -47,26 +47,34 @@
             top: -25px;
             font-size: 40px;
         }
+        .label {
+            font-weight: normal;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
-    <div id="clock">현재시간</div>
-    <div id="countdown"></div>
+    <div id="clock"><span class="label">현재 시간:</span><span id="currentTime"></span></div>
+    <div id="countdown"><span class="label">올해 말까지:</span><span id="timeLeft"></span></div>
     <div id="yearProgress">
-        올해 진행률: <span id="progressPercent"></span>
+        <span class="label">올해 진행률:</span><span id="progressPercent"></span>
     </div>
-    <div id="snailTrack">
-        <div id="snail">🐌</div>
+    <div id="runTrack">
+        <div id="runner">🏃</div>
         <div id="endFlag">🏁</div>
     </div>
 
     <script>
+        const runnerEmojis = ['🏃', '🏃‍♂️'];
+        let emojiIndex = 0;
+
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
         }
 
         function updateCountdown() {
@@ -79,7 +87,7 @@
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').textContent = `2025년까지 남은시간: ${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+            document.getElementById('timeLeft').textContent = `${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
         }
 
         function updateYearProgress() {
@@ -90,14 +98,18 @@
 
             document.getElementById('progressPercent').textContent = percent.toFixed(2) + '%';
             
-            // 달팽이 위치 업데이트
-            const snail = document.getElementById('snail');
-            snail.style.left = `${percent * 2.8}px`; // 300px * 94% = 282px (달팽이 크기 고려)
+            // 달리는 사람 위치 업데이트
+            const runner = document.getElementById('runner');
+            runner.style.left = `${percent * 2.8}px`; // 300px * 94% = 282px (이모지 크기 고려)
+            
+            // 달리는 모션 애니메이션
+            runner.textContent = runnerEmojis[emojiIndex];
+            emojiIndex = (emojiIndex + 1) % runnerEmojis.length;
         }
 
         setInterval(updateClock, 1000);
         setInterval(updateCountdown, 1000);
-        setInterval(updateYearProgress, 1000);
+        setInterval(updateYearProgress, 500); // 달리는 모션을 더 빠르게 업데이트
         updateClock();
         updateCountdown();
         updateYearProgress();
