@@ -50,7 +50,7 @@
     </style>
 </head>
 <body>
-    <div id="clock"></div>
+    <div id="clock">현재시간</div>
     <div id="countdown"></div>
     <div id="yearProgress">
         올해 진행률: <span id="progressPercent"></span>
@@ -79,7 +79,7 @@
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').textContent = `올해 말까지: ${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
+            document.getElementById('countdown').textContent = `2025년까지 남은시간: ${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
         }
 
         function updateYearProgress() {
