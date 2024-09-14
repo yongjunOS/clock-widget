@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시계 및 연말 카운트다운</title>
+    <title>시계, 연말 카운트다운 및 년도 진행률</title>
     <style>
         body {
             display: flex;
@@ -15,21 +15,40 @@
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
         }
-        #clock, #countdown {
-            font-size: 2em;
+        #clock, #countdown, #yearProgress {
+            font-size: 1.5em;
             font-weight: bold;
             color: #333;
             background-color: #fff;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             margin: 10px;
+            text-align: center;
+        }
+        #progressBar {
+            width: 200px;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+        #progress {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s;
         }
     </style>
 </head>
 <body>
     <div id="clock"></div>
     <div id="countdown"></div>
+    <div id="yearProgress">
+        올해 진행률: <span id="progressPercent"></span>
+        <div id="progressBar"><div id="progress"></div></div>
+    </div>
 
     <script>
         function updateClock() {
@@ -42,7 +61,7 @@
 
         function updateCountdown() {
             const now = new Date();
-            const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59); // 12월 31일 23:59:59
+            const endOfYear = new Date(now.getFullYear(), 11, 31, 23, 59, 59);
             const timeLeft = endOfYear - now;
 
             const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
@@ -53,10 +72,22 @@
             document.getElementById('countdown').textContent = `올해 말까지: ${days}일 ${hours}시간 ${minutes}분 ${seconds}초`;
         }
 
+        function updateYearProgress() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 1);
+            const end = new Date(now.getFullYear() + 1, 0, 1);
+            const percent = (now - start) / (end - start) * 100;
+
+            document.getElementById('progressPercent').textContent = percent.toFixed(2) + '%';
+            document.getElementById('progress').style.width = percent + '%';
+        }
+
         setInterval(updateClock, 1000);
         setInterval(updateCountdown, 1000);
+        setInterval(updateYearProgress, 1000);
         updateClock();
         updateCountdown();
+        updateYearProgress();
     </script>
 </body>
 </html>
