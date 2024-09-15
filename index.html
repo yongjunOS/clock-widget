@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>시계, 연말 카운트다운, 땀 흘리는 달팽이 및 태양 움직임</title>
+    <title>시계, 연말 카운트다운, 땀 흘리는 달팽이, 태양 움직임 및 조회수</title>
     <style>
         body {
             display: flex;
@@ -16,7 +16,7 @@
             transition: background-color 1s ease;
             overflow: hidden;
         }
-        #clock, #countdown, #yearProgress {
+        #clock, #countdown, #yearProgress, #viewCounter {
             font-size: 1.5em;
             font-weight: bold;
             color: #333;
@@ -90,6 +90,7 @@
         <div id="snail">🐌<span id="sweat">💦</span></div>
         <div id="endFlag">🏁</div>
     </div>
+    <div id="viewCounter"><span class="label">조회수:</span><span id="viewCount"></span></div>
 
     <script>
         function updateSunPosition() {
@@ -173,12 +174,23 @@
             sweat.style.opacity = Math.random() > 0.5 ? '1' : '0';
         }
 
+        function updateViewCount() {
+            let count = localStorage.getItem('viewCount');
+            if (!count) {
+                count = 659;
+            }
+            count = parseInt(count) + 1;
+            localStorage.setItem('viewCount', count);
+            document.getElementById('viewCount').textContent = count;
+        }
+
         setInterval(updateClock, 1000);
         setInterval(updateCountdown, 1000);
         setInterval(updateYearProgress, 500); // 달팽이와 땀 업데이트 주기
         updateClock();
         updateCountdown();
         updateYearProgress();
+        updateViewCount();
     </script>
 </body>
 </html>
