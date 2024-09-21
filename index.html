@@ -174,15 +174,13 @@
             sweat.style.opacity = Math.random() > 0.5 ? '1' : '0';
         }
 
-        function updateViewCount() {
-            let count = localStorage.getItem('viewCount');
-            if (!count) {
-                count = 659;
-            }
-            count = parseInt(count) + 1;
-            localStorage.setItem('viewCount', count);
-            document.getElementById('viewCount').textContent = count;
-        }
+       let count = localStorage.getItem('viewCount');
+if (count) {
+    count = 0;
+}
+count = parseInt(count) + 1;
+localStorage.setItem('viewCount', count);
+document.getElementById('viewCount').textContent = count;
 
         setInterval(updateClock, 1000);
         setInterval(updateCountdown, 1000);
