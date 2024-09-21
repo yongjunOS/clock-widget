@@ -76,11 +76,22 @@
             height: 100%;
             z-index: 1;
         }
+        #clockHand {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 4px;
+            background-color: rgba(0, 0, 0, 0.1);
+            transform-origin: left center;
+            z-index: 0;
+        }
     </style>
 </head>
 <body>
     <div id="sky"></div>
     <div id="sun">☀️</div>
+    <div id="clockHand"></div>
     <div id="clock"><span class="label">현재 시간:</span><span id="currentTime"></span></div>
     <div id="countdown"><span class="label">올해 말까지:</span><span id="timeLeft"></span></div>
     <div id="yearProgress">
@@ -90,7 +101,7 @@
         <div id="snail">🐌<span id="sweat">💦</span></div>
         <div id="endFlag">🏁</div>
     </div>
-    <div id="viewCounter"><span class="label">조회수:</span><span id="viewCount"></span></div>
+  
 
     <script>
         function updateSunPosition() {
@@ -142,6 +153,7 @@
             document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
             updateBackground();
             updateSunPosition();
+            updateClockHand();
         }
 
         function updateCountdown() {
@@ -173,22 +185,23 @@
             const sweat = document.getElementById('sweat');
             sweat.style.opacity = Math.random() > 0.5 ? '1' : '0';
         }
-
-       let count = localStorage.getItem('viewCount');
-if (count) {
-    count = 0;
-}
-count = parseInt(count) + 1;
-localStorage.setItem('viewCount', count);
-document.getElementById('viewCount').textContent = count;
+    
+        function updateClockHand() {
+            const now = new Date();
+            const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
+            const angle = (seconds / 60) * 360;
+            const clockHand = document.getElementById('clockHand');
+            clockHand.style.transform = `rotate(${angle}deg)`;
+        }
 
         setInterval(updateClock, 1000);
         setInterval(updateCountdown, 1000);
         setInterval(updateYearProgress, 500); // 달팽이와 땀 업데이트 주기
+        setInterval(updateClockHand, 50); // 더 부드러운 움직임을 위해 자주 업데이트
         updateClock();
         updateCountdown();
         updateYearProgress();
-        updateViewCount();
+        updateClockHand();
     </script>
 </body>
 </html>
